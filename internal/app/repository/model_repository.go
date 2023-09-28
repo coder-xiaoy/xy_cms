@@ -5,21 +5,21 @@ import (
 	"xy_cms/internal/app/model"
 )
 
-type ModelRepository struct {
+type modelRepository struct {
 	db *gorm.DB
-	m  model.Model
+	m  model.ModelM
 }
 
-func NewModelRepository(db *gorm.DB) *ModelRepository {
-	return &ModelRepository{db: db}
+func newModelRepository(db *gorm.DB) modelRepository {
+	return modelRepository{db: db}
 }
-func (m *ModelRepository) FindModelById(id uint32) (model.Model, error) {
-	var res model.Model
+func (m *modelRepository) FindModelById(id uint32) (model.ModelM, error) {
+	var res model.ModelM
 	err := m.db.Where("id = ?", id).Preload("ModelFields").First(&res).Error
 	return res, err
 }
-func (m *ModelRepository) GetModelAll() ([]model.Model, error) {
-	var res []model.Model
+func (m *modelRepository) GetModelAll() ([]model.ModelM, error) {
+	var res []model.ModelM
 	err := m.db.Preload("ModelFields").Find(&res).Error
 	return res, err
 }
