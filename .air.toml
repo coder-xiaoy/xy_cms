@@ -1,0 +1,3 @@
+[build]
+logfile = "./logs/air.log"  # 输出日志到指定文件
+log_output = "debug"  # 设定日志级别为debug
