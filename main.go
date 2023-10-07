@@ -52,7 +52,6 @@ func Test() []interface{} {
 	return s1
 }
 func main() {
-
 	dsn := "root:123456@tcp(192.168.147.115:3306)/test?charset=utf8mb4&parseTime=True&loc=Local"
 	db, _ := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
@@ -60,7 +59,7 @@ func main() {
 	repository.SetDefault(db)
 	r := gin.Default()
 	r.HTMLRender = providers.NewPengo2Render(providers.RenderOptions{
-		TemplateDir: "resources/views/admin",
+		TemplateDir: "resources/views",
 		TemplateSet: nil,
 		ContentType: "text/html; charset=utf-8",
 	})
@@ -72,14 +71,16 @@ func main() {
 		service.ContentService.GetContentByContentId(132)
 		context.JSON(http.StatusOK, res)
 	})
+	r.Static("/static", "./resources/static")
 	r.GET("/show", controller.ContentController.Show)
 
 	adminGroup := r.Group("/admin")
 	{
 		adminGroup.GET("/model", func(c *gin.Context) {
 			res, _ := service.ModelMService.GetList()
-			c.HTML(http.StatusOK, "model/index.html", pongo2.Context{"name": "Pongo2", "res2": res})
+			c.HTML(http.StatusOK, "admin/model/index.html", pongo2.Context{"name": "Pongo2", "res2": res})
 		})
+		adminGroup.GET("/category", admin.CategoryController.Index)
 		adminGroup.POST("/category", admin.CategoryController.Save)
 		adminGroup.GET("/category/:id", admin.CategoryController.Show)
 	}

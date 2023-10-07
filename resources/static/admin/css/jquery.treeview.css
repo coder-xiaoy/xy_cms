@@ -1,0 +1,54 @@
+
+html,body{color:#73645e;font: 14px/1.5 'Microsoft YaHei',"宋体","Arial Narrow",HELVETICA;}
+.treeview ul {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+.treeview .hitarea {height: 23px;width: 23px;float: right;cursor: pointer;}
+/* fix for IE6 */
+* html .hitarea {
+	display: inline;
+	float:none;
+}
+
+.treeview li {
+	margin: 0;
+}
+
+.treeview a.selected {
+	background-color: #eee;
+}
+
+#treecontrol { margin: 1em 0; display: none; }
+
+.treeview .hover { color: red; cursor: pointer; }
+
+.treeview li { line-height:24px; margin-bottom:2px;}
+.treeview .placeholder {
+	background: url(images/ajax-loader.gif) 0 0 no-repeat;
+	height: 16px;
+	width: 16px;
+	display: block;
+}
+
+.filetree li { padding: 3px 0 2px 16px; }
+.filetree span.folder, .filetree span.file { padding: 1px 0 1px 16px; display: block; }
+.filetree span.folder { background: url(images/folder.gif) 0 0 no-repeat; }
+.filetree li.expandable span.folder { background: url(images/folder-closed.gif) 0 0 no-repeat; }
+.filetree span.file { background: url(images/file.gif) 0 0 no-repeat; }
+
+#menu li{border: 1px solid #C1BDB0;margin-bottom: 10px; padding:5px;background-color: #fff;}
+#menu li a{font-size:15px; margin:0px; padding:0px; text-decoration:none; padding-left:20px; font-weight:bold;color:#73645e; padding-bottom:5px; margin-bottom:10px;}
+#menu li.parent{border: 1px solid #C1BDB0; margin-bottom: 8px; padding:5px;background-color: #fff;}
+
+#menu .parent a{font-size:15px; margin:0px; padding:0px; text-decoration:none; padding-left:10px; padding-left:20px; font-weight:bold;color:#73645e;  padding-top:1px; display:block; border:none;}
+#menu .parent li{ border:none; margin-bottom:0px; padding:0px;}
+#menu .parent li a{ font-size:14px;border: 1px solid #C1BDB0;}
+#menu ul li ul{ margin-top:5px;border-top:1px solid #C1BDB0; padding-top:7px;}
+#menu ul li ul li{}
+#menu li ul li a{ font-weight:normal !important;; background-color:#faf8f3; display:block; border:1px solid #c1bdb0;padding:3px 5px 3px 10px !important; color:#73645e; text-decoration:none; margin-bottom:5px !important; padding-left:20px !important;}
+.collapsable-hitarea{background: url(images/up.png) 0 0 no-repeat;}
+.expandable-hitarea{background: url(images/dowm.png) 0 0 no-repeat;}
+

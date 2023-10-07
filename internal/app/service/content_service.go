@@ -1,6 +1,7 @@
 package service
 
 import (
+	"log"
 	"xy_cms/internal/app/model"
 	"xy_cms/internal/app/repository"
 )
@@ -11,7 +12,7 @@ type contentService struct {
 func newContentService() contentService {
 	return contentService{}
 }
-func (s contentService) GetContentByContentId(contentID int32) (model.ContentWithMore, error) {
+func (s *contentService) GetContentByContentId(contentID int32) (model.ContentWithMore, error) {
 	var contentWithMore model.ContentWithMore
 	var err error
 
@@ -42,4 +43,11 @@ func (s contentService) GetContentByContentId(contentID int32) (model.ContentWit
 		Content:       content,
 	}
 	return contentWithMore, nil
+}
+func (s *contentService) GetContentCountWithCategory() ([]model.ContentCountWithCategory, error) {
+	res, err := repository.ContentRepository.GetContentCountWithCategory()
+	if err != nil {
+		log.Print("err:", err)
+	}
+	return res, err
 }

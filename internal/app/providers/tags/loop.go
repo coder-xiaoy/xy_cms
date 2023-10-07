@@ -1,7 +1,9 @@
 package tags
 
 import (
+	"fmt"
 	"github.com/flosch/pongo2/v6"
+	"xy_cms/internal/app/service"
 )
 
 func init() {
@@ -13,9 +15,14 @@ type tagLookNode struct {
 	wrapper *pongo2.NodeWrapper
 }
 
-func (t tagLookNode) Execute(context *pongo2.ExecutionContext, writer pongo2.TemplateWriter) *pongo2.Error {
-	//TODO implement me
-	panic("implement me")
+func (t *tagLookNode) Execute(context *pongo2.ExecutionContext, writer pongo2.TemplateWriter) *pongo2.Error {
+	loopCtx := pongo2.NewChildExecutionContext(context)
+	fmt.Println(t.args)
+
+	res, _ := service.ModelMService.GetList()
+	loopCtx.Private["res"] = res
+	t.wrapper.Execute(loopCtx, writer)
+	return nil
 }
 
 func tagLoopParser(doc *pongo2.Parser, start *pongo2.Token, arguments *pongo2.Parser) (pongo2.INodeTag, *pongo2.Error) {
@@ -41,5 +48,11 @@ func tagLoopParser(doc *pongo2.Parser, start *pongo2.Token, arguments *pongo2.Pa
 		}
 
 	}
+	wrapper, _, err := doc.WrapUntilTag("endloop")
+	if err != nil {
+		return nil, err
+	}
+
+	loopTag.wrapper = wrapper
 	return loopTag, nil
 }

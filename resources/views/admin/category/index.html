@@ -1,0 +1,46 @@
+{%include "admin/layout/header.html" %}
+<h1 class="sfcms_search_title">栏目管理</h1>
+<div class="line"></div>
+<form id="form1" name="form1" method="post" action="/api/category/sort">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="sfcms_table">
+    <tr>
+      <th colspan="7" class="title">
+        <div class="title_nav_1"><a href="index.php?m=sfcms&c=category">管理首页</a></div>
+        <span>|</span>
+        <div class="title_nav_2"><a href="/admin/category/add">添加栏目</a></div>
+        <span>|</span>
+        <div class="title_nav_3"><a href="index.php?m=sfcms&c=category&f=cache">更新缓存</a></div>
+      </th>
+    </tr>
+    <tr>
+      <th width="11%" class="tc">编号</th>
+      <th width="11%">排序</th>
+      <th>栏目名称</th>
+      <th width="13%">绑定模型</th>
+      <th width="9%">数据量</th>
+      <th width="30%">操作</th>
+    </tr>
+    {% for v in categoryList%}
+    <tr class='bf'>
+      <td class='tc'>{{v.ID}}
+      <td><input type="text" name="sort[{{v.ID}}]" id="sort{{v.ID}}" value="{{v.Sort}}" size="4"/></td>
+      <td> {{v.CatName}}</td>
+      <td>{{v.Model}}</td>
+      <td>{%if contentCount[v.ID]%}{{contentCount[v.ID]}} {%else%} 0 {%endif%}</td>
+      <td>
+        <a href="index.php?m=sfcms&c=category&f=add&p={{v.ID}}">添加子栏目</a> |
+        <a href="javascript:void(0)"  onclick="confirm('真的要清空此栏目内容吗?','index.php?m=sfcms&c=category&f=clear_data&id={{v.ID}}')">清空</a> |
+        <a href="/admin/category/{{v.ID}}">编辑</a> |
+        <a href="javascript:void(0)" onclick="confirm('真的要删除此栏目吗?','/admin/category/{{v.ID}}/delete')">删除</a>
+      </td>
+    </tr>
+    {%endfor%}
+    <tr class="bf">
+      <td width="11%">&nbsp;</td>
+      <td colspan=5><input type="submit" name="button" id="button" value="排序" class="button"/></td>
+    </tr>
+  </table>
+</form>
+<div class="sfcms_bottom"></div>
+</body>
+</html>

@@ -17,7 +17,7 @@ func newContentRepository(db *gorm.DB) contentRepository {
 	return contentRepository{db: db}
 }
 
-func (c contentRepository) WithContext(ctx context.Context) contentRepository {
+func (c *contentRepository) WithContext(ctx context.Context) contentRepository {
 	return newContentRepository(c.db.WithContext(ctx))
 }
 
@@ -51,13 +51,19 @@ func (c *contentRepository) GetContentByCategoryId(categoryId uint64) ([]map[str
 	return res, err1
 }
 
-func (c contentRepository) GetContentByContentId(id int32) (model.Content, error) {
+func (c *contentRepository) GetContentByContentId(id int32) (model.Content, error) {
 	var content model.Content
 	err := c.db.Where("contentid = ?", id).First(&content).Error
 	return content, err
 }
-func (c contentRepository) GetMoreContetnByContentId(contentId int64, tableName string) (map[string]interface{}, error) {
+func (c *contentRepository) GetMoreContetnByContentId(contentId int64, tableName string) (map[string]interface{}, error) {
 	res := map[string]interface{}{}
 	err := c.db.Table(tableName).Where("contentid=?", contentId).Take(&res).Error
 	return res, err
+}
+
+func (c *contentRepository) GetContentCountWithCategory() ([]model.ContentCountWithCategory, error) {
+	var countWithCategory []model.ContentCountWithCategory
+	err := c.db.Group("catid").Select("catid,count(*) as total").Model(&model.Content{}).Find(&countWithCategory).Error
+	return countWithCategory, err
 }

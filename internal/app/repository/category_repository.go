@@ -30,3 +30,8 @@ func (r *categoryRepository) Save(category *model.Category) bool {
 		return true
 	}
 }
+func (r *categoryRepository) GetAll() ([]model.Category, error) {
+	var categoryList []model.Category
+	err := r.db.Joins("CategoryModel").Find(&categoryList).Error
+	return categoryList, err
+}

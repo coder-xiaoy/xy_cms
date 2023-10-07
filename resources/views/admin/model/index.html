@@ -1,9 +1,15 @@
-{include file="admin/header.html"}
+{%include "admin/layout/header.html" %}
 <h1 class="sfcms_search_title">模型管理</h1>
 <div class="line"></div>
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="sfcms_table">
     <tr>
-        <th colspan="7" class="title"><div class="title_nav_1"><a href="index.php?m=sfcms&c=model">管理首页</a></div><span>|</span><div class="title_nav_2"><a href="index.php?m=sfcms&c=model&f=cache">更新缓存</a></div><span>|</span><div class="title_nav_3"><a href="javascript:location.reload()">刷新页面</a></div></th>
+        <th colspan="7" class="title">
+            <div class="title_nav_1"><a href="index.php?m=sfcms&c=model">管理首页</a></div>
+            <span>|</span>
+            <div class="title_nav_2"><a href="index.php?m=sfcms&c=model&f=cache">更新缓存</a></div>
+            <span>|</span>
+            <div class="title_nav_3"><a href="javascript:location.reload()">刷新页面</a></div>
+        </th>
     </tr>
     <tr>
         <td width="8%" class="tc">编号</td>
@@ -12,18 +18,18 @@
         <td width="15%">状态</td>
         <td width="25%">操作</td>
     </tr>
-    {% loop xx ,s1,s2,s3,m=3%}
-
+    {% loop xx ,s1,s2,s3,m=3 %}
+        {% for value in res %}
+            <tr {% if (forloop.Counter%2)== 0 %}class="bf" {% endif %}>
+                <td class="tc">{{value.ID}}</td>
+                <td>{{value.ModelName}}</td>
+                <td>{{value.ModelTable}}</td>
+                <td>{% if value.IsLock==0 %}<a href="index.php?m=sfcms&c=model&f=lock&id={{value.ID}}&lockid=1"><font color='#FF0000'>已锁定</font></a>{%else%}<a href="index.php?m=sfcms&c=model&f=lock&id={{value.ID}}&lockid=0">正常</a>{%endif%}</td>
+                <td><a href="index.php?m=sfcms&c=model&f=field&modelid={{value.ID}}">管理字段</a> | <a href="index.php?m=sfcms&c=model&f=model_edit&id={{value.ID}}">编辑</a> | {%if value.IsFixed==0%}<a href="###" onclick="confirm('真的要删除此模型吗?','index.php?m=sfcms&c=model&f=model_delete&id={{value.ID}}')">删除</a>{%else%}<font color='#FF0000'>删除</font>{%endif%}</td>
+            </tr>
+            </tr>
+        {% endfor %}
     {% endloop %}
-    {{res2 | length}}
-    {% for k,value in res2 %}
-    {{k}}
-    <tr {% if (forloop.Counter%2) == 0 %}class="bf"{% endif %} >
-        <td class="tc">{{value.ID}} </td>
-        <td>{{value.ModelName}}</td>
-        <td>{{value.ModelTable}}</td>
-     </tr>
-    {% endfor %}
 </table>
 <div class="sfcms_bottom"></div>
 </body>
