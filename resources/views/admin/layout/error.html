@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>提示信息</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <base target="_self">
+    <style>* {
+        font-size: 12px;
+        color: #2B61BA;
+    }
+
+    body {
+        font-family: "微软雅黑", "宋体", Verdana, Arial, Helvetica, sans-serif;
+        background: #FFFFFF;
+        margin: 0;
+    }
+
+    a:link, a:visited, a:active {
+        color: #ABBBD6;
+        text-decoration: none;
+    }
+
+    .msg {
+        width: 400px;
+        text-align: left;
+        background: #FFFFFF url("/static/admin/images/msgbg.gif") repeat-x;
+        margin: auto;
+    }
+
+    .head {
+        letter-spacing: 2px;
+        line-height: 29px;
+        height: 26px;
+        overflow: hidden;
+        font-weight: bold;
+    }
+
+    .content {
+        padding: 10px 20px 5px 20px;
+        line-height: 200%;
+        word-break: break-all;
+        border: #7998B7 1px solid;
+        border-top: none;
+    }
+
+    .ml {
+        color: #FFFFFF;
+        background: url("/static/admin/images/msg.gif") no-repeat 0 0;
+        padding-left: 10px;
+    }
+
+    .mr {
+        float: right;
+        background: url("/static/admin/images/msg.gif") no-repeat 0 -34px;
+        width: 4px;
+        font-size: 1px;
+    }
+    </style>
+</head>
+<body>
+
+
+<script>
+    var pgo = 0;
+
+    function JumpUrl() {
+        if (pgo == 0) {
+            {% if url  == "-1"%}
+            location = "javascript:history.go(-1);";
+            {%elif url == "0" %}
+            location = "javascript:history.back()"
+            {%else%}
+            location = "javascript:window.location.href={{url}}"
+            {%endif%}
+            
+            pgo = 1;
+        }
+    }
+
+    //setTimeout("JumpUrl()", 3000);
+</script>
+<br><br><br>
+<div class="msg">
+    <div class="head">
+        <div class="mr"></div>
+        <div class="ml">提示信息！</div>
+    </div>
+    <div class="content">
+        {%for k,v in message%}
+        {{v}}<br>
+        {%endfor%}
+        <a
+            href="javascript:history.go(-1);">如果你的浏览器没反应，请点击这里...</a>
+    </div>
+</div>
+
+
+</body>
+</html>

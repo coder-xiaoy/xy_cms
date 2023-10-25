@@ -8,6 +8,7 @@ var (
 	ModelRepository    *modelRepository
 	CategoryRepository *categoryRepository
 	ModelMRepository   *modelMRepository
+	ConfigRepository   *configRepository
 )
 
 func SetDefault(db *gorm.DB) {
@@ -16,6 +17,7 @@ func SetDefault(db *gorm.DB) {
 	ModelRepository = &Q.modelRepository
 	CategoryRepository = &Q.categoryRepository
 	ModelMRepository = &Q.modelMRepository
+	ConfigRepository = &Q.configRepository
 }
 
 func Use(db *gorm.DB) *Query {
@@ -25,6 +27,7 @@ func Use(db *gorm.DB) *Query {
 		modelRepository:    newModelRepository(db),
 		categoryRepository: newCategoryRepository(db),
 		modelMRepository:   newModelMRepository(db),
+		configRepository:   newConfigRepository(db),
 	}
 }
 
@@ -34,4 +37,5 @@ type Query struct {
 	modelRepository    modelRepository
 	categoryRepository categoryRepository
 	modelMRepository   modelMRepository
+	configRepository   configRepository
 }

@@ -12,6 +12,8 @@ var (
 	ContentService  *contentService
 	ModelMService   *modelMService
 	CategoryService *categoryService
+	ConfigService   *configService
+	TemplateService *templateService
 )
 
 func init() {
@@ -26,6 +28,8 @@ func setDefault() {
 	ContentService = &S.contentService
 	ModelMService = &S.modelMService
 	CategoryService = &S.categoryService
+	ConfigService = &S.configService
+	TemplateService = &S.templateService
 
 }
 
@@ -34,6 +38,8 @@ func newService() *service {
 		contentService:  newContentService(),
 		modelMService:   newModelMService(),
 		categoryService: newCategoryService(),
+		configService:   newConfigService(),
+		templateService: newTemplateService(),
 	}
 }
 
@@ -41,4 +47,6 @@ type service struct {
 	contentService  contentService
 	modelMService   modelMService
 	categoryService categoryService
+	configService   configService
+	templateService templateService
 }

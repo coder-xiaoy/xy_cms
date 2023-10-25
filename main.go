@@ -7,12 +7,10 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
-	"reflect"
 	"strconv"
 	"syscall"
 	"time"
@@ -20,37 +18,11 @@ import (
 	"xy_cms/internal/app/controller/admin"
 	"xy_cms/internal/app/providers"
 	_ "xy_cms/internal/app/providers/tags"
+	_ "xy_cms/internal/app/providers/validator"
 	"xy_cms/internal/app/repository"
 	"xy_cms/internal/app/service"
-	"xy_cms/internal/app/utils"
 )
 
-func IsEven(num any) bool {
-	types := []reflect.Kind{reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64}
-	res := false
-	numType := reflect.TypeOf(num)
-	for _, t := range types {
-		if numType.Kind() == t {
-			res = reflect.ValueOf(num).Int()%2 == 0
-			break
-		}
-	}
-	return res
-}
-
-type Result struct {
-	Pages []string
-	Data  []string
-}
-
-func Test() []interface{} {
-	s, _ := service.ModelMService.GetList()
-	var s1 = make([]interface{}, 0)
-	for _, v := range s {
-		s1 = append(s1, v)
-	}
-	return s1
-}
 func main() {
 	dsn := "root:123456@tcp(192.168.147.115:3306)/test?charset=utf8mb4&parseTime=True&loc=Local"
 	db, _ := gorm.Open(mysql.Open(dsn), &gorm.Config{
@@ -63,7 +35,7 @@ func main() {
 		TemplateSet: nil,
 		ContentType: "text/html; charset=utf-8",
 	})
-	r.SetFuncMap(template.FuncMap{"isEven": IsEven, "test": Test, "loop": utils.Loop})
+	//r.SetFuncMap(template.FuncMap{"isEven": IsEven, "test": Test, "loop": utils.Loop})
 	//r.LoadHTMLFiles("resources/views/admin/model/index.html")
 	r.GET("/ping", func(context *gin.Context) {
 		id, _ := strconv.ParseInt(context.Query("id"), 0, 64)
@@ -72,6 +44,7 @@ func main() {
 		context.JSON(http.StatusOK, res)
 	})
 	r.Static("/static", "./resources/static")
+	r.StaticFile("/favicon.ico", "./resources/static/admin/images/t_9.gif")
 	r.GET("/show", controller.ContentController.Show)
 
 	adminGroup := r.Group("/admin")
@@ -83,6 +56,8 @@ func main() {
 		adminGroup.GET("/category", admin.CategoryController.Index)
 		adminGroup.POST("/category", admin.CategoryController.Save)
 		adminGroup.GET("/category/:id", admin.CategoryController.Show)
+		adminGroup.GET("/setting", admin.SettingController.Show)
+		adminGroup.POST("/setting", admin.SettingController.Update)
 	}
 
 	srv := &http.Server{

@@ -24,4 +24,4 @@ database:
   fieldWithTypeTag  : false
   # detect integer field's unsigned type, adjust generated data type
   fieldSignable  : false
-  onlyModel : true
+  #onlyModel : true
