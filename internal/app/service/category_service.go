@@ -4,6 +4,7 @@ import (
 	"log"
 	"xy_cms/internal/app/model"
 	"xy_cms/internal/app/repository"
+	"xy_cms/internal/app/request"
 	"xy_cms/internal/app/utils"
 )
 
@@ -22,10 +23,38 @@ func (receiver *categoryService) GetCategoryById(id int64) (model.Category, erro
 	return result, err
 }
 
-func (receiver *categoryService) Save() *model.Category {
+func (receiver *categoryService) Save(categoryRequest request.CategoryRequest) bool {
+	modelM, err := repository.ModelMRepository.GetModelMByModelId(categoryRequest.ModelID)
+	if err != nil {
+		return false
+	}
 	var category = &model.Category{}
-	repository.CategoryRepository.Save(category)
-	return category
+	category.CatName = categoryRequest.CatName
+	category.Model = modelM.ModelTable
+	category.Type = categoryRequest.Type
+	category.ModelID = categoryRequest.ModelID
+	category.ParentID = categoryRequest.ParentID
+	category.CatName = categoryRequest.CatName
+	category.CatDir = categoryRequest.CatDir
+	category.Thumb = categoryRequest.Thumb
+	category.URL = categoryRequest.URL
+	category.Sort = categoryRequest.Sort
+	category.IsShow = categoryRequest.IsShow
+	category.IsMeshow = categoryRequest.IsMeshow
+	category.IsTarget = categoryRequest.IsTarget
+	category.IsHTML = categoryRequest.IsHTML
+	category.IsLink = categoryRequest.IsLink
+	category.TemplateCate = categoryRequest.TemplateCate
+	category.TemplateList = categoryRequest.TemplateList
+	category.TemplateShow = categoryRequest.TemplateShow
+	category.SeoTitle = categoryRequest.SeoTitle
+	category.SeoKey = categoryRequest.SeoKey
+	category.SeoDes = categoryRequest.SeoDes
+	category.Power = categoryRequest.Power
+	category.URLList = categoryRequest.URLList
+	category.URLShow = categoryRequest.URLShow
+
+	return repository.CategoryRepository.Save(category)
 }
 func (receiver *categoryService) GetAll() []model.Category {
 	categoryList, err := repository.CategoryRepository.GetAll()

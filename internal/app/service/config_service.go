@@ -1,8 +1,10 @@
 package service
 
 import (
+	"encoding/json"
 	"log"
 	"xy_cms/internal/app/repository"
+	"xy_cms/internal/app/response"
 )
 
 type configService struct {
@@ -24,4 +26,17 @@ func (c *configService) GetConfigByTag(tag string) (string, error) {
 func (c *configService) UpdateConfigByTag(tag string, config string) error {
 	return repository.ConfigRepository.UpdateConfigByTag(tag, config)
 
+}
+func (c *configService) GetConfigSetting() (response.SettingResponse, error) {
+	var configSetting response.SettingResponse
+	config, err := repository.ConfigRepository.GetConfigByTag("config")
+	if err != nil {
+		log.Printf("err:" + err.Error())
+		return configSetting, err
+	}
+	err = json.Unmarshal([]byte(config.ConfigArray), &configSetting)
+	if err != nil {
+		log.Printf("err:" + err.Error())
+	}
+	return configSetting, err
 }

@@ -1,0 +1,214 @@
+{%include "admin/layout/header.html"%}
+<h1 class="sfcms_search_title">栏目管理</h1>
+<div class="line"></div>
+<form name="addform" action="/admin/category" method="post">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="sfcms_add_table">
+        <tr>
+            <th colspan="7" class="title">
+                <div class="title_nav_1"><a href="index.php?m=sfcms&c=category">管理首页</a></div>
+                <span>|</span>
+                <div class="title_nav_2"><a href="index.php?m=sfcms&c=category&f=add">添加栏目</a></div>
+                <span>|</span>
+                <div class="title_nav_3"><a href="index.php?m=sfcms&c=category&f=cache">更新缓存</a></div>
+            </th>
+        </tr>
+        <tr>
+            <td width="14%" align="right">上级栏目:</td>
+            <td width="86%" colspan="3"><label>
+                <select name="parentid" id="parentid">
+                    <option value="0">无(作为一级栏目)</option>
+                    {% for v in categoryList%}
+                    <option value="{{v.ID}}" {%if v.ID== category.ParentID%} selected {%endif%}>
+                        {{v.CatName}}
+                    </option>
+                    {%endfor%}
+                </select>
+            </label></td>
+        </tr>
+        <tr>
+            <td align="right">栏目名称:</td>
+            <td colspan="3">
+                <input type="text" name="cat_name" class="txt" size="30" {%if category%}value="{{category.CatName}}"
+                       {%else%} {%endif%} id="catname"/>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">栏目目录:</td>
+            <td colspan="3">
+                <input type="text" name="cat_dir" class="txt" size="15" id="catdir"
+                       {%if category%}value="{{category.CatDir}}" {%else%} {%endif%}/> 注:必须为字母或字母+数字
+            </td>
+        </tr>
+        <tr>
+            <td align="right">栏目图片:</td>
+            <td colspan="3">
+                <input type="text" name="thumb" id="thumb" class="txt" size="30">
+                <a href="#"
+                   onclick="javascript:ShowIframe(400,115,'上传缩略图！','system/function/upload.inc.php?filename=thumb')">上传</a>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">内容模型:</td>
+            <td colspan="3"><select name="model_id" id="model" onChange="get_model(this.value)">
+                <option value="">请选择模型</option>
+                {%for v in modelList%}
+                <option value="{{v.ID}}"  {%if v.ID== category.ModelID%} selected {%endif%}>{{v.ModelName}}</option>
+                {%endfor%}
+            </select></td>
+        </tr>
+
+        <tr>
+            <th colspan="4" style="padding-left:5px;">更多选项[<a href="###"
+                                                                  onclick="openShutManager(this,'box4',false,'关闭','展开')">展开</a>]
+            </th>
+        </tr>
+    </table>
+
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" id="box4" style="display:none"
+           class="sfcms_add_table sfcms_cate_add_table">
+        <tr>
+            <td align="right">外部链接:</td>
+            <td colspan="3">
+                <select name="is_link" id="is_link" onChange="islink(this.value)" class="fl">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select>
+                <div id="text_show" style="display:none;">链接地址：<input type="text" name="url" class="txt" size="20"
+                                                                          id="url"> *
+                    请填写完整路径，如：http://www.senfeikeji.com
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td width="14%" align="right">栏目排序:</td>
+            <td width="84%" colspan="3"><input type="text" name="sort" class="txt" size="6" id="sort"{%if category%}value="{{category.Sort}}" {%else%}value="0"  {%endif%}></td>
+        </tr>
+        <tr>
+            <td align="right">是否导航显示:</td>
+            <td colspan="3">
+                <input name="is_show" type="radio" value="1" {% if category.IsShow %}checked="checked" {%endif%} class="checkbox"/>
+                是
+                <input name="is_show" type="radio" value="0" class="checkbox" {% if !category.IsShow %}checked="checked" {%endif%}/>
+                否
+            </td>
+        </tr>
+
+        <tr>
+            <td align="right">是否新窗口打开:</td>
+            <td colspan="3">
+                <input name="is_target" type="radio" value="1" {% if category.IsTarget %}checked="checked" {%endif%} class="checkbox"/>
+                是
+                <input name="is_target" type="radio" value="0" {% if !category.IsTarget %}checked="checked" {%endif%}   class="checkbox"/>
+                否
+            </td>
+        </tr>
+        <tr>
+            <td align="right">栏目静态设置:</td>
+            <td colspan="3">
+                <input name="is_html" type="radio" value="0" {% if !category.IsHTML %}checked="checked" {%endif%} class="checkbox"
+                       onClick="get_url(this.value)"/>
+                动态
+                <input name="is_html" type="radio" value="1" {% if category.IsHTML %}checked="checked" {%endif%} class="checkbox"
+                       onClick="get_url(this.value)"/>
+                静态
+            </td>
+        </tr>
+        <tr>
+            <td align="right">栏目页模板:</td>
+            <td colspan="3">
+                <select name="template_cate">
+                    {%for v in templateList.Category%}
+                    <option value="{{v}}" {% if category.TemplateCate == v %}selected {%endif%}>{{v}}</option>
+                    {%endfor%}
+                </select> 注：选择与模型名称相对应的模板，如新闻(news)则选择category_news.html
+            </td>
+        </tr>
+        <tr>
+            <td align="right">列表页模板:</td>
+            <td colspan="3">
+                <select name="template_list">
+                    {%for v in templateList.List%}
+                    <option value="{{v}}" {% if category.TemplateList == v %}selected {%endif%}>{{v}}</option>
+                    {%endfor%}
+                </select> 注：选择与模型名称相对应的模板，如新闻(news)则选择list_news.html
+            </td>
+        </tr>
+        <tr>
+            <td align="right">内容页模板:</td>
+            <td colspan="3">
+                <select name="template_show">
+                    {%for v in templateList.Show%}
+                    <option value="{{v}}" {% if category.TemplateShow == v %}selected {%endif%}>{{v}}</option>
+                    {%endfor%}
+                </select> 注：选择如新闻(news)则选择show_news.html
+            </td>
+        </tr>
+        <tr>
+            <td align="right">列表页url规则:</td>
+            <td colspan="3">
+                <select name="url_list">
+                    {%for v in templateList%}
+                    <option value="{{v}}">{{v}}</option>
+                    {%endfor%}
+                </select></td>
+        </tr>
+        <tr>
+            <td align="right">内容页url规则:</td>
+            <td colspan="3">
+                <select name="url_show">
+                    {%for v in templateList%}
+                    <option value="{{v}}">{{v}}</option>
+                    {%endfor%}
+                </select></td>
+        </tr>
+        <tr>
+            <td align="right">SEO标题:</td>
+            <td colspan="3"><input type="text" name="seo_title" class="txt" size="30" value="{{category.SeoTitle}}"></td>
+        </tr>
+        <tr>
+            <td align="right">SEO关键字:</td>
+            <td colspan="3"><input type="text" name="seo_key" class="txt" size="45" value="{{category.SeoKey}}"></td>
+        </tr>
+        <tr>
+            <td align="right">SEO描述:</td>
+            {{category.SeoDes}}
+            <td colspan="3"><textarea name="seo_des" cols="45" rows="5">{{category.SeoDes}}</textarea></td>
+        </tr>
+        <tr>
+            <th colspan="4" style="padding-left:5px;">权限设置 <b>[注：如不限制请留空]</b></th>
+        </tr>
+        <tr>
+            <td align="right">前台访问:</td>
+            <td colspan="3">
+                <lable>
+                    <input name="power[member_0]" type="checkbox" value="1"/>游客
+                </lable>
+                {%for v in templateList%}
+                <label>
+                    <input name="power[member_{{v}}]" type="checkbox" value="1"/>{{v}}
+                </label>
+                {%endfor%}
+            </td>
+        </tr>
+        <tr>
+            <td align="right">后台管理:</td>
+            <td colspan="3">
+                {%for v in templateList%}
+                <label>
+                    <input name="power[member_{{v}}]" type="checkbox" value="1"/>{{v}}
+                </label>
+                {%endfor%}
+
+            </td>
+        </tr>
+    </table>
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" class="sfcms_add_table sfcms_cate_add_table">
+        <tr>
+            <td align="right" width="14%">&nbsp;</td>
+            <td><input type="submit" name="submit" value="确认添加" class="submit"/></td>
+        </tr>
+    </table>
+</form>
+<div class="sfcms_bottom"></div>
+</body>
+</html>

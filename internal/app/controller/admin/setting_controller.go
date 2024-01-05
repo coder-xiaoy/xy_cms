@@ -20,8 +20,8 @@ func newSettingController() settingController {
 }
 func (s *settingController) Show(ctx *gin.Context) {
 
-	config, _ := service.ConfigService.GetConfigByTag("config")
-	templates := service.TemplateService.GetTemplateList()
+	config, _ := service.ConfigService.GetConfigSetting()
+	templates := service.TemplateService.GetThemeList()
 	fmt.Println(config)
 	ctx.HTML(200, "admin/setting/view.html", pongo2.Context{
 		"cfg":       config,
@@ -36,7 +36,6 @@ func (s *settingController) Update(ctx *gin.Context) {
 		return
 	}
 	configStr, err := json.Marshal(settingRequest)
-	fmt.Println(string(configStr))
 	if err != nil {
 		s.ShowMsg(ctx, "-1", map[string]string{
 			"error": "保存失败",
@@ -44,7 +43,7 @@ func (s *settingController) Update(ctx *gin.Context) {
 	}
 	if ok := service.ConfigService.UpdateConfigByTag("config", string(configStr)); ok != nil {
 		fmt.Println(ok)
-		
+
 		s.ShowMsg(ctx, "-1", map[string]string{
 			"error": "保存失败",
 		})

@@ -7,7 +7,7 @@ type Category struct {
 	ID            int64      `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
 	Model         string     `gorm:"column:model;not null" json:"model"`
 	Type          bool       `gorm:"column:type;not null" json:"type"`
-	ModelID       int32      `gorm:"column:model_id;not null" json:"model_id"`
+	ModelID       int64      `gorm:"column:model_id;not null" json:"model_id"`
 	ParentID      int64      `gorm:"column:parent_id;not null" json:"parent_id"`
 	CatName       string     `gorm:"column:cat_name;not null" json:"cat_name"`
 	CatDir        string     `gorm:"column:cat_dir;not null" json:"cat_dir"`

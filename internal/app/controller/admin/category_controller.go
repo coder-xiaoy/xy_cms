@@ -1,16 +1,18 @@
 package admin
 
 import (
-	"fmt"
 	"github.com/flosch/pongo2/v6"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"net/http"
+	"strconv"
+	"xy_cms/internal/app/providers/validator"
 	"xy_cms/internal/app/request"
 	"xy_cms/internal/app/service"
 )
 
 type categoryController struct {
+	errorController
 }
 
 func newCategoryController() categoryController {
@@ -20,14 +22,30 @@ func (c *categoryController) Save(ctx *gin.Context) {
 	categoryRequest := request.CategoryRequest{}
 	err := ctx.ShouldBindWith(&categoryRequest, binding.FormPost)
 	if err != nil {
-		fmt.Println(err)
+		c.ShowMsg(ctx, "-1", validator.TranslateErrors(err, "form"))
+		return
 	}
-	ctx.JSON(http.StatusOK, gin.H{"err": err.Error()})
+
+	if service.CategoryService.Save(categoryRequest) {
+		ctx.String(http.StatusOK, "保存成功")
+	} else {
+		ctx.String(http.StatusOK, "save failed")
+	}
 }
 func (c *categoryController) Show(ctx *gin.Context) {
-
-	service.CategoryService.GetAllTree()
-	ctx.JSON(http.StatusOK, gin.H{"id": service.CategoryService.GetAllDeep()})
+	var id int64
+	paramsId, _ := ctx.Params.Get("id")
+	id, _ = strconv.ParseInt(paramsId, 10, 64)
+	category, _ := service.CategoryService.GetCategoryById(id)
+	categoryList := service.CategoryService.GetAll()
+	templateList := service.TemplateService.GetThemeTemplateList("default")
+	modelList, _ := service.ModelMService.GetList()
+	ctx.HTML(http.StatusOK, "admin/category/show.html", pongo2.Context{
+		"category":     category,
+		"categoryList": categoryList,
+		"templateList": templateList,
+		"modelList":    modelList,
+	})
 }
 func (c *categoryController) Index(ctx *gin.Context) {
 	categoryList := service.CategoryService.GetAllDeep()

@@ -1,10 +1,9 @@
 package request
 
 type CategoryRequest struct {
-	Model        string `form:"model" json:"model"`
 	Type         bool   `form:"type" json:"type"`
-	ModelID      int32  `form:"model_id" binding:"required" json:"model_id"`
-	ParentID     int32  `form:"parent_id" json:"parent_id"`
+	ModelID      int64  `form:"model_id" binding:"required" json:"model_id"`
+	ParentID     int64  `form:"parent_id" json:"parent_id"`
 	CatName      string `form:"cat_name" json:"cat_name"`
 	CatDir       string `form:"cat_dir" json:"cat_dir"`
 	Thumb        string `form:"thumb" json:"thumb"`
