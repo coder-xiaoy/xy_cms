@@ -32,24 +32,18 @@ func (s *settingController) Update(ctx *gin.Context) {
 	var settingRequest request.SettingRequest
 	err := ctx.ShouldBindWith(&settingRequest, binding.FormPost)
 	if err != nil {
-		s.ShowMsg(ctx, "-1", validator2.TranslateErrors(err, "form"))
+		s.ShowMsg(ctx, "-1", validator2.TranslateSliceErrors(err, "form"))
 		return
 	}
 	configStr, err := json.Marshal(settingRequest)
 	if err != nil {
-		s.ShowMsg(ctx, "-1", map[string]string{
-			"error": "保存失败",
-		})
+		s.ShowMsg(ctx, "-1", []string{"保存失败"})
 	}
 	if ok := service.ConfigService.UpdateConfigByTag("config", string(configStr)); ok != nil {
 		fmt.Println(ok)
 
-		s.ShowMsg(ctx, "-1", map[string]string{
-			"error": "保存失败",
-		})
+		s.ShowMsg(ctx, "-1", []string{"保存失败"})
 		return
 	}
-	s.ShowMsg(ctx, "-1", map[string]string{
-		"error": "保存成功",
-	})
+	s.ShowMsg(ctx, "-1", []string{"保存成功"})
 }

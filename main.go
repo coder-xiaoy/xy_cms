@@ -56,6 +56,7 @@ func main() {
 		adminGroup.GET("/category", admin.CategoryController.Index)
 		adminGroup.POST("/category", admin.CategoryController.Save)
 		adminGroup.GET("/category/:id", admin.CategoryController.Show)
+		adminGroup.POST("/category/:id", admin.CategoryController.Update)
 		adminGroup.GET("/setting", admin.SettingController.Show)
 		adminGroup.POST("/setting", admin.SettingController.Update)
 	}

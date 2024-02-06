@@ -9,7 +9,7 @@ import (
 type errorController struct {
 }
 
-func (e *errorController) ShowMsg(ctx *gin.Context, url string, message map[string]string) {
+func (e *errorController) ShowMsg(ctx *gin.Context, url string, message []string) {
 	ctx.HTML(http.StatusOK, "admin/layout/error.html", pongo2.Context{
 		"url":     url,
 		"message": message,

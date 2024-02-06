@@ -24,3 +24,4 @@ func StrPadRight(input string, padLength int, padString string) string {
 	}
 	return input + output
 }
+ 

@@ -1,7 +1,7 @@
 {%include "admin/layout/header.html"%}
 <h1 class="sfcms_search_title">栏目管理</h1>
 <div class="line"></div>
-<form name="addform" action="/admin/category" method="post">
+<form name="addform" action="{{action}}" method="post">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="sfcms_add_table">
         <tr>
             <th colspan="7" class="title">
@@ -15,7 +15,7 @@
         <tr>
             <td width="14%" align="right">上级栏目:</td>
             <td width="86%" colspan="3"><label>
-                <select name="parentid" id="parentid">
+                <select name="parent_id" id="parentid">
                     <option value="0">无(作为一级栏目)</option>
                     {% for v in categoryList%}
                     <option value="{{v.ID}}" {%if v.ID== category.ParentID%} selected {%endif%}>

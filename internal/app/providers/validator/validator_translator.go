@@ -48,3 +48,11 @@ func TranslateErrors(err error, tag string) map[string]string {
 	}
 	return validateErrors
 }
+func TranslateSliceErrors(err error, tag string) []string {
+	errs := make([]string, 0)
+	translateErrors := TranslateErrors(err, tag)
+	for key := range translateErrors {
+		errs = append(errs, translateErrors[key])
+	}
+	return errs
+}

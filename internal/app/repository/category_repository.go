@@ -30,6 +30,15 @@ func (r *categoryRepository) Save(category *model.Category) bool {
 		return true
 	}
 }
+func (r *categoryRepository) UpdateById(category *model.Category, id int64) bool {
+	err := r.db.Model(&category).Where("id=?", id).Updates(category).Error
+	if err != nil {
+		return false
+	} else {
+		return true
+	}
+}
+
 func (r *categoryRepository) GetAll() ([]model.Category, error) {
 	var categoryList []model.Category
 	err := r.db.Joins("CategoryModel").Find(&categoryList).Error

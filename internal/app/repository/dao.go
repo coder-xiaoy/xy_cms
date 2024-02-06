@@ -1,6 +1,9 @@
 package repository
 
-import "gorm.io/gorm"
+import (
+	"context"
+	"gorm.io/gorm"
+)
 
 var (
 	Q                  = new(Query)
@@ -38,4 +41,11 @@ type Query struct {
 	categoryRepository categoryRepository
 	modelMRepository   modelMRepository
 	configRepository   configRepository
+}
+
+func (q *Query) Transaction(ctx context.Context, f func(tx *gorm.DB) error) error {
+	db := q.db.WithContext(ctx)
+	return db.Transaction(func(tx *gorm.DB) error {
+		return f(tx)
+	})
 }

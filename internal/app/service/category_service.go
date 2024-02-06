@@ -1,6 +1,10 @@
 package service
 
 import (
+	"context"
+	"errors"
+	"github.com/jinzhu/copier"
+	"gorm.io/gorm"
 	"log"
 	"xy_cms/internal/app/model"
 	"xy_cms/internal/app/repository"
@@ -23,36 +27,48 @@ func (receiver *categoryService) GetCategoryById(id int64) (model.Category, erro
 	return result, err
 }
 
+func (receiver *categoryService) UpdateByCategoryId(ctx context.Context, categoryRequest request.CategoryRequest, id int64) bool {
+	ctx.Deadline()
+	err := repository.Q.Transaction(ctx, func(tx *gorm.DB) error {
+		modelM, err := repository.ModelMRepository.GetModelMByModelId(categoryRequest.ModelID)
+		if err != nil {
+			return err
+		}
+		var category = &model.Category{}
+		err = copier.Copy(category, &categoryRequest)
+		if err != nil {
+			return err
+		}
+		category.Model = modelM.ModelTable
+		result := repository.CategoryRepository.UpdateById(category, id)
+		if result {
+			return nil
+		} else {
+			return errors.New("update failed")
+		}
+	})
+	if err != nil {
+		return false
+	}
+	if err != nil {
+		return true
+	}
+	return false
+
+}
+
 func (receiver *categoryService) Save(categoryRequest request.CategoryRequest) bool {
 	modelM, err := repository.ModelMRepository.GetModelMByModelId(categoryRequest.ModelID)
 	if err != nil {
 		return false
 	}
 	var category = &model.Category{}
-	category.CatName = categoryRequest.CatName
+	err = copier.Copy(category, &categoryRequest)
+	if err != nil {
+		return false
+	}
+
 	category.Model = modelM.ModelTable
-	category.Type = categoryRequest.Type
-	category.ModelID = categoryRequest.ModelID
-	category.ParentID = categoryRequest.ParentID
-	category.CatName = categoryRequest.CatName
-	category.CatDir = categoryRequest.CatDir
-	category.Thumb = categoryRequest.Thumb
-	category.URL = categoryRequest.URL
-	category.Sort = categoryRequest.Sort
-	category.IsShow = categoryRequest.IsShow
-	category.IsMeshow = categoryRequest.IsMeshow
-	category.IsTarget = categoryRequest.IsTarget
-	category.IsHTML = categoryRequest.IsHTML
-	category.IsLink = categoryRequest.IsLink
-	category.TemplateCate = categoryRequest.TemplateCate
-	category.TemplateList = categoryRequest.TemplateList
-	category.TemplateShow = categoryRequest.TemplateShow
-	category.SeoTitle = categoryRequest.SeoTitle
-	category.SeoKey = categoryRequest.SeoKey
-	category.SeoDes = categoryRequest.SeoDes
-	category.Power = categoryRequest.Power
-	category.URLList = categoryRequest.URLList
-	category.URLShow = categoryRequest.URLShow
 
 	return repository.CategoryRepository.Save(category)
 }
