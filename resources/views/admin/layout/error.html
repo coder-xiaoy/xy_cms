@@ -71,14 +71,14 @@
             {%elif url == "0" %}
             location = "javascript:history.back()"
             {%else%}
-            location = "javascript:window.location.href={{url}}"
+            location = "javascript:window.location.href='{{url}}'"
             {%endif%}
             
             pgo = 1;
         }
     }
 
-    //setTimeout("JumpUrl()", 3000);
+    setTimeout("JumpUrl()", 3000);
 </script>
 <br><br><br>
 <div class="msg">
@@ -90,8 +90,14 @@
         {%for v in message%}
         {{v}}<br>
         {%endfor%}
-        <a
-            href="javascript:history.go(-1);">如果你的浏览器没反应，请点击这里...</a>
+        {% if url  == "-1"%}
+        <a href="javascript:history.go(-1);">如果你的浏览器没反应，请点击这里...</a>
+        {%elif url == "0" %}
+        <a href="javascript:history.back()">如果你的浏览器没反应，请点击这里...</a>
+        {%else%}
+        <a href="javascript:window.location.href='{{url}}';">如果你的浏览器没反应，请点击这里...</a>
+        {%endif%}
+
     </div>
 </div>
 

@@ -69,11 +69,11 @@
         <tr>
             <td align="right">外部链接:</td>
             <td colspan="3">
-                <select name="is_link" id="is_link" onChange="islink(this.value)" class="fl">
-                    <option value="0">否</option>
-                    <option value="1">是</option>
+                <select name="is_link" id="is_link" {% if category.IsLink %} value="1" {%else%}  value="0"  {%endif%}  onChange="islink(this.value)" class="fl">
+                    <option value="0" {% if !category.IsLink %} selected  {%endif%}>否</option>
+                    <option value="1" {% if category.IsLink %} selected  {%endif%}>是</option>
                 </select>
-                <div id="text_show" style="display:none;">链接地址：<input type="text" name="url" class="txt" size="20"
+                <div id="text_show" {% if !category.IsLink %} style="display:none;" {%endif%}>链接地址：<input type="text" name="url" {% if category.URL %} value="{{category.URL}}" {%endif%} class="txt" size="20"
                                                                           id="url"> *
                     请填写完整路径，如：http://www.senfeikeji.com
                 </div>

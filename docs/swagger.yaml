@@ -1,0 +1,152 @@
+basePath: /api/v1
+definitions:
+  model.ModelM:
+    properties:
+      id:
+        type: integer
+      is_fixed:
+        type: boolean
+      is_lock:
+        type: boolean
+      model_fields:
+        items:
+          $ref: '#/definitions/xy_cms_internal_model.ModelField'
+        type: array
+      model_name:
+        type: string
+      model_table:
+        type: string
+    type: object
+  response.Result-array_xy_cms_internal_model_Category:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/xy_cms_internal_model.Category'
+        type: array
+      message:
+        type: string
+    type: object
+  xy_cms_internal_model.Category:
+    properties:
+      cat_dir:
+        type: string
+      cat_name:
+        type: string
+      category_model:
+        $ref: '#/definitions/model.ModelM'
+      children:
+        items:
+          $ref: '#/definitions/xy_cms_internal_model.Category'
+        type: array
+      id:
+        type: integer
+      is_html:
+        type: boolean
+      is_link:
+        type: boolean
+      is_meshow:
+        type: boolean
+      is_show:
+        type: boolean
+      is_target:
+        type: boolean
+      model:
+        type: string
+      model_id:
+        type: integer
+      parent_id:
+        type: integer
+      power:
+        type: string
+      seo_des:
+        type: string
+      seo_key:
+        type: string
+      seo_title:
+        type: string
+      sort:
+        type: integer
+      template_cate:
+        type: string
+      template_list:
+        type: string
+      template_show:
+        type: string
+      thumb:
+        type: string
+      type:
+        type: boolean
+      url:
+        type: string
+      url_list:
+        type: integer
+      url_show:
+        type: integer
+    type: object
+  xy_cms_internal_model.ModelField:
+    properties:
+      explain:
+        type: string
+      field:
+        type: string
+      fieldid:
+        type: integer
+      formtype:
+        type: string
+      height:
+        type: integer
+      initial:
+        type: string
+      is_fixed:
+        type: boolean
+      modelid:
+        type: integer
+      name:
+        type: string
+      sort:
+        type: integer
+      width:
+        type: integer
+    type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server celler server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /api/v1/category:
+    get:
+      consumes:
+      - application/json
+      description: get accounts
+      parameters:
+      - description: name search by q
+        format: email
+        in: query
+        name: q
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Result-array_xy_cms_internal_model_Category'
+      summary: List accounts
+      tags:
+      - cms/category
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"

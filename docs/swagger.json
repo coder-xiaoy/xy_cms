@@ -1,0 +1,229 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a sample server celler server.",
+        "title": "Swagger Example API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "API Support",
+            "url": "http://www.swagger.io/support",
+            "email": "support@swagger.io"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api/v1",
+    "paths": {
+        "/api/v1/category": {
+            "get": {
+                "description": "get accounts",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cms/category"
+                ],
+                "summary": "List accounts",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "email",
+                        "description": "name search by q",
+                        "name": "q",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Result-array_xy_cms_internal_model_Category"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "model.ModelM": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "is_fixed": {
+                    "type": "boolean"
+                },
+                "is_lock": {
+                    "type": "boolean"
+                },
+                "model_fields": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/xy_cms_internal_model.ModelField"
+                    }
+                },
+                "model_name": {
+                    "type": "string"
+                },
+                "model_table": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.Result-array_xy_cms_internal_model_Category": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/xy_cms_internal_model.Category"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "xy_cms_internal_model.Category": {
+            "type": "object",
+            "properties": {
+                "cat_dir": {
+                    "type": "string"
+                },
+                "cat_name": {
+                    "type": "string"
+                },
+                "category_model": {
+                    "$ref": "#/definitions/model.ModelM"
+                },
+                "children": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/xy_cms_internal_model.Category"
+                    }
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_html": {
+                    "type": "boolean"
+                },
+                "is_link": {
+                    "type": "boolean"
+                },
+                "is_meshow": {
+                    "type": "boolean"
+                },
+                "is_show": {
+                    "type": "boolean"
+                },
+                "is_target": {
+                    "type": "boolean"
+                },
+                "model": {
+                    "type": "string"
+                },
+                "model_id": {
+                    "type": "integer"
+                },
+                "parent_id": {
+                    "type": "integer"
+                },
+                "power": {
+                    "type": "string"
+                },
+                "seo_des": {
+                    "type": "string"
+                },
+                "seo_key": {
+                    "type": "string"
+                },
+                "seo_title": {
+                    "type": "string"
+                },
+                "sort": {
+                    "type": "integer"
+                },
+                "template_cate": {
+                    "type": "string"
+                },
+                "template_list": {
+                    "type": "string"
+                },
+                "template_show": {
+                    "type": "string"
+                },
+                "thumb": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "boolean"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "url_list": {
+                    "type": "integer"
+                },
+                "url_show": {
+                    "type": "integer"
+                }
+            }
+        },
+        "xy_cms_internal_model.ModelField": {
+            "type": "object",
+            "properties": {
+                "explain": {
+                    "type": "string"
+                },
+                "field": {
+                    "type": "string"
+                },
+                "fieldid": {
+                    "type": "integer"
+                },
+                "formtype": {
+                    "type": "string"
+                },
+                "height": {
+                    "type": "integer"
+                },
+                "initial": {
+                    "type": "string"
+                },
+                "is_fixed": {
+                    "type": "boolean"
+                },
+                "modelid": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "sort": {
+                    "type": "integer"
+                },
+                "width": {
+                    "type": "integer"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "BasicAuth": {
+            "type": "basic"
+        }
+    },
+    "externalDocs": {
+        "description": "OpenAPI",
+        "url": "https://swagger.io/resources/open-api/"
+    }
+}
