@@ -24,6 +24,7 @@ func (receiver *categoryService) GetCategoryById(id int64, ctx context.Context) 
 	if err != nil {
 		log.Print("err:" + err.Error())
 	}
+	qu
 	return result, err
 }
 
