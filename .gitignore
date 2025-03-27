@@ -1,2 +1,5 @@
 /vendor/
 /.idea/
+/internal/dal/gen_model/*.gen.go
+/internal/dal/query/*.gen.go
+/internal/dal/query/gen.go

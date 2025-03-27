@@ -1,18 +1,25 @@
 package main
 
 import (
+	"fmt"
+	"github.com/duke-git/lancet/v2/stream"
+	"gorm.io/gen"
+	"gorm.io/gen/field"
 	"log"
 	"xy_cms/internal/bootstrap"
 	"xy_cms/internal/db"
-
-	"gorm.io/gen"
 )
+
+// Dynamic SQL
+type Querier interface {
+	// SELECT * FROM @@table WHERE name = @name{{if role !=""}} AND role = @role{{end}}
+	FilterWithNameAndRole(name, role string) ([]gen.T, error)
+}
 
 func main() {
 	// 1️⃣ 获取数据库连接
 
 	bootstrap.InitDB()
-	db := db.GetDb()
 	// 2️⃣ 初始化 GORM Gen 代码生成器
 	g := gen.NewGenerator(gen.Config{
 		OutPath:        "./internal/dal/query",                                             // 生成代码的目录
@@ -22,12 +29,35 @@ func main() {
 		FieldCoverable: true,
 	})
 
-	g.UseDB(db) // 绑定数据库
+	g.UseDB(db.GetDb()) // 绑定数据库
+	tableList, err := db.GetDb().Migrator().GetTables()
+	if err != nil {
+		panic(fmt.Errorf("get all tables fail: %w", err))
+	}
+	var modelTableList []string
+	customTableList := []string{"admin_group", "admin"}
+	db.GetDb().Table("model").Select("model_table").Find(&modelTableList)
+	fmt.Println(customTableList)
+	tableList = stream.FromSlice(tableList).Filter(func(item string) bool {
+		return stream.FromSlice(append(modelTableList, customTableList...)).IndexOf(item, func(a, b string) bool {
+			return a == b
+		}) == -1
+	}).ToSlice()
+	fmt.Println(tableList)
+	log.Println(tableList)
+	adminGroup := g.GenerateModel("admin_group", gen.FieldRelate(field.HasMany, "Admins", g.GenerateModel("admin"),
+		&field.RelateConfig{GORMTag: field.GormTag{
+			"foreignKey": []string{"GroupId"},
+		}}))
 
-	// 3️⃣ 生成 `UserEntity` 对应的代码
-	//user := g.GenerateModel("admin") // `users` 表
-	//g.ApplyBasic(user)
-	g.ApplyBasic(g.GenerateAllTable()...)
+	admin := g.GenerateModel("admin", gen.FieldRelate(field.BelongsTo, "AdminGroup", adminGroup,
+		&field.RelateConfig{
+			GORMTag: field.GormTag{"foreignKey": []string{"GroupId"}, "references": []string{"ID"}},
+		}))
+
+	//g.ApplyBasic(g.GenerateAllTable()...)
+	g.ApplyBasic(admin, adminGroup)
+	//g.ApplyInterface(func(Querier) {}, g.GenerateAllTable()...)
 	// 4️⃣ 生成代码
 	g.Execute()
 	log.Println("✅ GORM Gen 代码生成完成")
