@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/jinzhu/copier"
 	"log"
+	"xy_cms/internal/dal/query"
 	errors2 "xy_cms/internal/errors"
 	"xy_cms/internal/model"
 	"xy_cms/internal/repository"
@@ -19,13 +20,12 @@ func newCategoryService() categoryService {
 	return categoryService{}
 }
 
-func (receiver *categoryService) GetCategoryById(id int64, ctx context.Context) (model.Category, error) {
-	result, err := repository.CategoryRepository.WithContext(ctx).GetCategoryByCategoryId(id)
+func (receiver *categoryService) GetCategoryById(id int64, ctx context.Context) (category model.Category, err error) {
+	err = query.Q.Category.WithContext(ctx).Where(query.Category.ID.Eq(id)).Scan(&category)
 	if err != nil {
 		log.Print("err:" + err.Error())
 	}
-	qu
-	return result, err
+	return
 }
 
 func (receiver *categoryService) UpdateByCategoryId(ctx context.Context, categoryRequest request.CategoryRequest, id int64) bool {

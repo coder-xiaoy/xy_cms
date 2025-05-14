@@ -45,6 +45,11 @@ func main() {
 	}).ToSlice()
 	fmt.Println(tableList)
 	log.Println(tableList)
+	var models []any
+	stream.FromSlice(tableList).ForEach(func(item string) {
+		models = append(models, g.GenerateModel(item))
+	})
+
 	adminGroup := g.GenerateModel("admin_group", gen.FieldRelate(field.HasMany, "Admins", g.GenerateModel("admin"),
 		&field.RelateConfig{GORMTag: field.GormTag{
 			"foreignKey": []string{"GroupId"},
@@ -54,9 +59,11 @@ func main() {
 		&field.RelateConfig{
 			GORMTag: field.GormTag{"foreignKey": []string{"GroupId"}, "references": []string{"ID"}},
 		}))
-
+	models = append(models, admin, adminGroup)
+	log.Println("✅ GORM Gen 打印models")
+	log.Println(models)
 	//g.ApplyBasic(g.GenerateAllTable()...)
-	g.ApplyBasic(admin, adminGroup)
+	g.ApplyBasic(models...)
 	//g.ApplyInterface(func(Querier) {}, g.GenerateAllTable()...)
 	// 4️⃣ 生成代码
 	g.Execute()
