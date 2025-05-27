@@ -54,7 +54,8 @@ func (*Ad) TableName() string {
 // @externalDocs.description  OpenAPI
 // @externalDocs.url          https://swagger.io/resources/open-api/
 func main() {
-
+	// 初始化配置文件
+	bootstrap.InitConfig()
 	bootstrap.InitDB()
 	r := gin.Default()
 	r.HTMLRender = providers.NewPengo2Render(providers.RenderOptions{
@@ -62,8 +63,6 @@ func main() {
 		TemplateSet: nil,
 		ContentType: "text/html; charset=utf-8",
 	})
-	//r.SetFuncMap(template.FuncMap{"isEven": IsEven, "test": Test, "loop": utils.Loop})
-	//r.LoadHTMLFiles("resources/views/admin/model/index.html")
 	router.Init(r)
 	srv := &http.Server{
 		Addr:           ":8000",

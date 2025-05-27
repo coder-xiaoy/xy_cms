@@ -13,9 +13,6 @@ import (
 
 func Init(r *gin.Engine) {
 	r.GET("/ping", func(context *gin.Context) {
-		//id, _ := strconv.ParseInt(context.Query("id"), 0, 64)
-		//res, _ := repository.ContentRepository.GetContentByCategoryId(uint64(id))
-		//service.ContentService.GetContentByContentId(132)
 		context.JSON(http.StatusOK, 123)
 	})
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
