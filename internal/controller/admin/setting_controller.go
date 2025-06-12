@@ -6,6 +6,7 @@ import (
 	"github.com/flosch/pongo2/v6"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+	"golang.org/x/exp/slog"
 	validator2 "xy_cms/internal/providers/validator"
 	"xy_cms/internal/request"
 	"xy_cms/internal/service"
@@ -14,7 +15,7 @@ import (
 type settingController struct {
 	errorController
 }
-
+ 
 func newSettingController() settingController {
 	return settingController{}
 }
@@ -22,7 +23,7 @@ func (s *settingController) Show(ctx *gin.Context) {
 
 	config, _ := service.ConfigService.GetConfigSetting()
 	templates := service.TemplateService.GetThemeList()
-	fmt.Println(config)
+	slog.ErrorContext(ctx.Request.Context(), "settingController.Show()", config)
 	ctx.HTML(200, "admin/setting/view.html", pongo2.Context{
 		"cfg":       config,
 		"templates": templates,

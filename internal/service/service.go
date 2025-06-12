@@ -2,7 +2,13 @@ package service
 
 import (
 	"fmt"
+	"github.com/google/wire"
 	"sync"
+)
+
+var ServiceSet = wire.NewSet(
+	 
+	NewCategoryServiceImpl,
 )
 
 var syncOnce sync.Once

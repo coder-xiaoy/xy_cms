@@ -55,6 +55,7 @@ func (receiver *categoryService) UpdateByCategoryId(ctx context.Context, categor
 }
 
 func (receiver *categoryService) Save(categoryRequest request.CategoryRequest) (bool, error) {
+
 	modelM, err := repository.ModelMRepository.GetModelMByModelId(categoryRequest.ModelID)
 	if err != nil {
 		return false, err

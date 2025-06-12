@@ -5,10 +5,10 @@ import (
 )
 
 type Paginator[T any] struct {
-	TotalCount int64
-	Page       int64
-	PageSize   int64
-	Result     T
+	TotalCount int64 `json:"total_count"`
+	Page       int64 `json:"page"`
+	PageSize   int64 `json:"page_size"`
+	Result     T     `json:"result"`
 }
 
 func NewPaginator[T any](totalCount, page, pageSize int64) *Paginator[T] {

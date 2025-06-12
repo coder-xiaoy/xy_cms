@@ -2,18 +2,28 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/exp/slog"
+	"io"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
+	"xy_cms/internal"
 	"xy_cms/internal/bootstrap"
+	"xy_cms/internal/dal/query"
+	"xy_cms/internal/db"
 	"xy_cms/internal/providers"
 	_ "xy_cms/internal/providers/tags"
 	_ "xy_cms/internal/providers/validator"
+	"xy_cms/internal/repository"
+	"xy_cms/internal/request"
 	"xy_cms/internal/router"
+	"xy_cms/internal/service"
 )
 
 type name struct {
@@ -53,10 +63,52 @@ func (*Ad) TableName() string {
 
 // @externalDocs.description  OpenAPI
 // @externalDocs.url          https://swagger.io/resources/open-api/
+func redirectGinLogToSlog() {
+	gin.DefaultWriter = &ginLogAdapter{}
+	gin.DefaultErrorWriter = &ginErrorLogAdapter{}
+}
+
+// 适配器将 Gin 日志转为 slog.Info
+type ginLogAdapter struct{}
+
+func (a *ginLogAdapter) Write(p []byte) (n int, err error) {
+
+	slog.Info(strings.TrimSpace(string(p)))
+	return len(p), nil
+}
+
+// 适配器将 Gin 错误日志转为 slog.Error
+type ginErrorLogAdapter struct{}
+
+func (a *ginErrorLogAdapter) Write(p []byte) (n int, err error) {
+	slog.Error(strings.TrimSpace(string(p)))
+	return len(p), nil
+}
+
 func main() {
+	f, _ := os.OpenFile("xy_cms.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0666)
+	multiWriter := io.MultiWriter(f, os.Stdout)
+	handler := slog.NewTextHandler(multiWriter, &slog.HandlerOptions{
+		Level:     slog.LevelDebug,
+		AddSource: true,
+	})
+	slog.SetDefault(slog.New(handler))
+
 	// 初始化配置文件
 	bootstrap.InitConfig()
 	bootstrap.InitDB()
+	repository.SetDefault(db.GetDb())
+	query.SetDefault(db.GetDb())
+	internal.InitializeCategoryControllerV2().Test()
+	s := service.BlockServiceImpl{}
+	list, err := s.GetBlockList(request.PageRequest{
+		Page:     1,
+		PageSize: 1,
+	})
+	fmt.Println(list)
+	if err != nil {
+		return
+	}
 	r := gin.Default()
 	r.HTMLRender = providers.NewPengo2Render(providers.RenderOptions{
 		TemplateDir: "resources/views",

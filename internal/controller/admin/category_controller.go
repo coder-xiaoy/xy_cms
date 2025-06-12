@@ -6,6 +6,7 @@ import (
 	"github.com/flosch/pongo2/v6"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+	"log/slog"
 	"net/http"
 	"strconv"
 	errors2 "xy_cms/internal/errors"
@@ -17,7 +18,18 @@ import (
 type categoryController struct {
 	errorController
 }
+type CategoryControllerV2 struct {
+	categoryService service.ICategoryService
+}
 
+func (receiver CategoryControllerV2) Test() {
+	result, err := receiver.categoryService.GetCategoryById(1)
+	slog.Info("Test", result, err)
+
+}
+func NewCategoryControllerV2(categoryService service.ICategoryService) CategoryControllerV2 {
+	return CategoryControllerV2{categoryService: categoryService}
+}
 func newCategoryController() categoryController {
 	return categoryController{}
 }

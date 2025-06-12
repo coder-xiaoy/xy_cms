@@ -18,7 +18,7 @@ type Querier interface {
 
 func main() {
 	// 1️⃣ 获取数据库连接
-
+	bootstrap.InitConfig()
 	bootstrap.InitDB()
 	// 2️⃣ 初始化 GORM Gen 代码生成器
 	g := gen.NewGenerator(gen.Config{
@@ -52,12 +52,12 @@ func main() {
 
 	adminGroup := g.GenerateModel("admin_group", gen.FieldRelate(field.HasMany, "Admins", g.GenerateModel("admin"),
 		&field.RelateConfig{GORMTag: field.GormTag{
-			"foreignKey": []string{"GroupId"},
+			"foreignKey": []string{"ID"},
 		}}))
 
 	admin := g.GenerateModel("admin", gen.FieldRelate(field.BelongsTo, "AdminGroup", adminGroup,
 		&field.RelateConfig{
-			GORMTag: field.GormTag{"foreignKey": []string{"GroupId"}, "references": []string{"ID"}},
+			GORMTag: field.GormTag{"foreignKey": []string{"GroupID"}, "references": []string{"ID"}},
 		}))
 	models = append(models, admin, adminGroup)
 	log.Println("✅ GORM Gen 打印models")

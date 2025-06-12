@@ -12,12 +12,13 @@ import (
 func InitConfig() {
 	viper.SetConfigType("yaml")
 
-	exePath, err := os.Executable()
-	if err != nil {
-		log.Fatalf("failed to get executable path: %v", err)
-	}
-
-	configPath := filepath.Join(filepath.Dir(exePath), "../", "config", "config.yml")
+	//exePath, err := os.Executable()
+	//if err != nil {
+	//	log.Fatalf("failed to get executable path: %v", err)
+	//}
+	//
+	//configPath := filepath.Join(filepath.Dir(exePath), "../", "config", "config.yml")
+	configPath := filepath.Join("./", "config", "config.yml")
 	file, err := os.ReadFile(configPath)
 	if err != nil {
 		log.Fatalf("failed to read config file at %s: %v", configPath, err)
